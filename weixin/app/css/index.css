@@ -1,0 +1,28 @@
+*{
+	margin:0;
+	padding:0;
+}
+body{font-size:16px;color:#333;text-align:center;}
+.header{
+	width:100vw;
+	height:200px;
+	position:relative;
+}
+.header ul li{
+	list-style:none;
+	width:50px;
+	height:40px;
+	float:right;
+	line-height:40px;
+	text-align:center;
+	color:#333;
+	cursor:pointer;
+}
+.mpslist li{
+	padding:5px 10px 5px 10px;
+	font-size:16px;
+	line-height:26px;
+	text-align:center;
+	color:#333;
+	font-family: "微软雅黑"
+}

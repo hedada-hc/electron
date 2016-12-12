@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" content="content">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body >
+<div id="app">
+	
+
+	<nav class="header" >
+		<ul>
+			<li @click="inter()">最小化</li>
+			<li @click="requests()">获取二维码</li>
+			<li @click="close()">关闭</li>
+		</ul>
+	</nav>
+	<p>{{ test =='201' ? '已扫描请在手机上确定':'请用手机扫描二维码' }}</p>
+	<img width="200"  :src="uuid">
+	<div v-if="select">
+		<span>微信昵称：{{user.User.NickName}}</span>
+		<span>签名：{{user.User.Signature}}</span>
+		<span>性别：{{user.User.Sex !=1?'女人':'男人'}}</span>
+		<p>已关注 {{user.MPSubscribeMsgCount}} 个公众号</p>
+		<ul class="mpslist">
+			<li @click="send(v.UserName)" v-for="v in user.MPSubscribeMsgList">{{v.NickName}}、</li>
+		</ul>
+		
+	</div>
+<!-- 	<table>
+			<thead>
+				<tr>
+					<th>来自店铺</th>
+					<th>商品名称</th>
+					<th>价格</th>
+					<th>佣金</th>
+					<th>30天销量</th>
+					<th>店铺优惠</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="v in list">
+					<td>{{v.nick}}</td>
+					<td v-html="v.title"></td>
+					<td>{{v.zkPrice}}</td>
+					<td>{{v.tkCommFee}}</td>
+					<td>{{v.biz30day}}</td>
+					<td>{{v.couponInfo !='无'?v.couponInfo:'没有优惠'}}</td>
+				</tr>
+			</tbody>
+		</table> -->
+</div>		
+	<script src="js/vue.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
