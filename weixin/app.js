@@ -12,7 +12,7 @@ function createWindow(){
 	mainWindow = new BrowserWindow({
 		width:800,
 		height:800,
-		frame:false,
+		// frame:false,
 		title:'微信群发机器人'
 	})
 	mainWindow.loadURL('file://'+__dirname+'/app/index.html')
@@ -52,36 +52,36 @@ ipc.on('status',function(error,url){
 			mainWindow.webContents.send('status',msg.text)
 		})
 })
+
+var cookies = ''
 //获取登录秘钥
 ipc.on("keyUrl",function(error,url){
-
 	request
 		.get(url)
 		.end(function(err,msg){
+			cookies = msg.header['set-cookie']  
+			console.log("11111111111111111111") 
+			         //从response中得到cookie
 			mainWindow.webContents.send('keyUrls',msg.text)
 		})
 
 })
 
-
+var setcookie = ''
 //获取用户资料
 ipc.on('User',function(error,msg){
 	var json = JSON.parse(msg)
-	//1087016540
-	//{"BaseRequest":{"Uin":"1087016540","Sid":"wH7OpUhzG7GcqxIa","Skey":"@crypt_834e4770_063d5ea9ec688fa931c11b027a14e418","DeviceID":"e740492363221392"}}
 	var num = Math.random()
 	var url = "https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit?r=216279821&lang=zh_CN&pass_ticket="+json.error.pass_ticket
-	console.log(url)
-	console.log('{"BaseRequest":{"Uin":"'+json.error.wxuin+'","Sid":"'+json.error.wxsid+'","Skey":"'+json.error.skey+'","DeviceID":"e740492363221392"}}')
+	console.log(cookies) 
+	console.log("222222222222222222222222222") 
 	request.post(url)
+		.set('Content-Type', 'text/plain')
+		.set("Cookie", cookies)  
 		.send('{"BaseRequest":{"Uin":"'+json.error.wxuin+'","Sid":"'+json.error.wxsid+'","Skey":"'+json.error.skey+'","DeviceID":"e740492363221392"}}')
 		.end(function(err,success){
+			//setcookie = success.header['set-cookie']  
 			mainWindow.webContents.send('select',success.text)
-			console.log(success)
-			var cookie = success.header['set-cookie']
-			console.log("------------------------------------")
-			console.log(cookie)
-			console.log("------------------------------------")
 			
 		})
 })
@@ -91,18 +91,14 @@ ipc.on('MemberList',function(error,msg){
 	var json = JSON.parse(msg)
 	var timestamp = new Date().getTime();
 	var url = "https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetcontact?lang=zh_CN&pass_ticket="+json.pass_ticket+"&r="+timestamp+"&seq=0&skey="+json.skey
-	console.log(timestamp)
-	console.log(url)
-			
-
+	console.log(cookies)
+	console.log("33333333333333333333333") 
 	request
 		.get(url)
-		.query('lang=zh_CN')
-		.query('pass_ticket='+json.pass_ticket)
-		.query('r='+timestamp)
-		.query('seq=0')
-		.query('skey='+json.skey)
+		.set('Content-Type', 'text/plain')
+		.set("Cookie", cookies) 
 		.end(function(err,success){
+			//cookies = success.header['set-cookie']  
 			mainWindow.webContents.send('MList',success.text)
 		})
 })

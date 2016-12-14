@@ -8,6 +8,7 @@ ipc.on('http',function(error,success){
 var vues = new Vue({
 	el:"#app",
 	data:{
+		nav:false,
 		uuid:'',
 		uid:'',
 		test:'',
@@ -18,7 +19,9 @@ var vues = new Vue({
 		wxuin:'',
 		user:'',
 		select:false,
-		username:''
+		username:'',
+		MemberList:'',
+		loginSta:'请用手机扫描二维码'
 	},
 	methods:{
 		close:function(){
@@ -60,6 +63,7 @@ ipc.on('status',function(error,success){
 		vues.img = success.substr(37,success.length-2)
 		vues.img = vues.img.substr(0,vues.img.length-2)
 		vues.uuid = vues.img
+		vues.loginSta = "已扫描请在手机上确定"
 		console.log(success)
 	}else if(vues.test == 200){
 		clearInterval(item)
@@ -69,12 +73,9 @@ ipc.on('status',function(error,success){
 		console.log(keyUrls)
 		if(re ==1){
 			re = 0
+			vues.loginSta = "登录成功，正在个人资料....."
 			ipc.send('keyUrl',keyUrls)
-
 		}
-		
-		console.log('keyurl')
-		
 	}
 
 })
@@ -84,6 +85,7 @@ ipc.on("keyUrls",function(error,success){
 	parseString(success, function (err, result) {
 		var xml = JSON.stringify(result)
 		var key = JSON.parse(xml)
+		console.log(key)
 		if(key.error.wxuin != 0){
 			vues.skey = key.error.skey
 			vues.wxsid = key.error.wxsid
@@ -102,6 +104,7 @@ ipc.on('select',function(error,success){
 	vues.user = user
 	vues.username = user.User.UserName
 	vues.select = true
+	vues.loginSta = "个人资料获取完成"
 	ipc.send('MemberList','{"pass_ticket":"'+vues.pass_ticket+'","skey":"'+vues.skey+'"}')
 })
 
@@ -111,7 +114,9 @@ ipc.on('select',function(error,success){
 //MemberList  //MemberCount
 ipc.on('MList',function(error,success){
 	var json = JSON.parse(success)
-	console.log(json)
+	vues.MemberList = json
+	vues.loginSta = "好友列表更新完成，请享用！"
+	console.log(vues.MemberList.MemberList)
 })
 
 
